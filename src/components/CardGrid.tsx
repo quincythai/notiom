@@ -1,33 +1,93 @@
 import React, { useState } from "react";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, useDisclosure } from "@chakra-ui/react";
 import Card from "./Card";
-import { Image } from "@chakra-ui/react";
+import HeaderCard from "./HeaderCard";
+
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Textarea,
+  Button,
+} from "@chakra-ui/react";
 
 const CardGrid = () => {
-  const [cards, setCards] = useState(Array(11).fill({}));
+  const [cards, setCards] = useState([
+    {
+      id: 1,
+      text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint quod unde iure. Maxime nisi velit fugiat voluptate, aperiam magnam commodi culpa? Magni, praesentium doloribus perspiciatis sequi quasi labore molestiae quos!",
+    },
+  ]);
+
+  const [value, setValue] = useState("");
+
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    setValue(inputValue);
+  };
+
+  const addNewCard = () => {
+    const newCard = {
+      id: cards.length + 1,
+      text: value,
+    };
+    setCards([...cards, newCard]);
+    setValue("");
+  };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Grid
-      templateColumns="repeat(6, 140px)"
-      gap={6}
-      margin={8}
-      justifyContent="center"
-    >
-      <GridItem width="140px" height="140px">
-        <Image
-          alt="create doc"
-          src="create-doc.svg"
-          borderRadius={8}
-          boxSize="100%"
-          objectFit="cover"
-        ></Image>
-      </GridItem>
-      {cards.map((card, index) => (
-        <GridItem key={index} width="140px" height="140px">
-          <Card text={card.text} />
+    <>
+      <Grid
+        templateColumns="repeat(6, 140px)"
+        gap={6}
+        margin={8}
+        justifyContent="center"
+      >
+        <GridItem width="140px" height="140px" onClick={onOpen}>
+          <HeaderCard />
         </GridItem>
-      ))}
-    </Grid>
+        {cards.map((card, index) => (
+          <GridItem key={index} width="140px" height="140px">
+            <Card text={card.text} />
+          </GridItem>
+        ))}
+      </Grid>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>New Card</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Textarea
+              placeholder="Enter card text..."
+              value={value}
+              onChange={handleInputChange}
+            ></Textarea>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button
+              colorScheme="blue"
+              onClick={() => {
+                addNewCard();
+                onClose();
+              }}
+            >
+              Add
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
