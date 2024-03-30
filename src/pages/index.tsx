@@ -1,6 +1,8 @@
 import Head from "next/head";
 
 import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
+import CardGrid from "@/components/CardGrid";
 
 export default function Home() {
   return (
@@ -13,6 +15,8 @@ export default function Home() {
       </Head>
       <main>
         <Navbar />
+        <Header />
+        <CardGrid />
       </main>
     </>
   );
