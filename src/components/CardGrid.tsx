@@ -4,7 +4,7 @@ import Card from "./Card";
 import { Image } from "@chakra-ui/react";
 
 const CardGrid = () => {
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState(Array(11).fill({}));
 
   return (
     <Grid
@@ -13,7 +13,7 @@ const CardGrid = () => {
       margin={8}
       justifyContent="center"
     >
-      <GridItem w="140px" h="140px">
+      <GridItem width="140px" height="140px">
         <Image
           alt="create doc"
           src="create-doc.svg"
@@ -22,46 +22,13 @@ const CardGrid = () => {
           objectFit="cover"
         ></Image>
       </GridItem>
-      <GridItem w="140px" h="140px">
-        <Card></Card>
-      </GridItem>
-      <GridItem w="140px" h="140px">
-        <Card text="Specific text"></Card>
-      </GridItem>
-      <GridItem w="140px" h="140px">
-        <Card></Card>
-      </GridItem>
-      <GridItem>
-        <Card text="Longer text that will truncate maybe really hello"></Card>
-      </GridItem>
-      <GridItem w="140px" h="140px">
-        <Card></Card>
-      </GridItem>
-      <GridItem w="140px" h="140px">
-        <Card></Card>
-      </GridItem>
-      <GridItem w="140px" h="140px">
-        <Card></Card>
-      </GridItem>
-      <GridItem w="140px" h="140px">
-        <Card></Card>
-      </GridItem>
-      <GridItem w="140px" h="140px">
-        <Card></Card>
-      </GridItem>
-      <GridItem w="140px" h="140px">
-        <Card></Card>
-      </GridItem>
-      <GridItem w="140px" h="140px">
-        <Card></Card>
-      </GridItem>
+      {cards.map((card, index) => (
+        <GridItem key={index} width="140px" height="140px">
+          <Card text={card.text} />
+        </GridItem>
+      ))}
     </Grid>
   );
 };
 
 export default CardGrid;
-
-/* 
-CardGrid where 1st is the adder card
-
-*/

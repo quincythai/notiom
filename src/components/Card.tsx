@@ -24,8 +24,8 @@ const Card: React.FC<CardProps> = ({
       borderColor="gray"
       padding={4}
       borderRadius={8}
-      w="100%"
-      h="100%"
+      width="100%"
+      height="100%"
     >
       {trimmedText}
     </Box>
