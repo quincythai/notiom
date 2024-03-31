@@ -25,7 +25,7 @@ const CardGrid = () => {
 
   const [value, setValue] = useState("");
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const inputValue = e.target.value;
     setValue(inputValue);
   };
@@ -41,6 +41,12 @@ const CardGrid = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const updateCardText = (id, newText) => {
+    setCards(
+      cards.map((card) => (card.id === id ? { ...card, text: newText } : card))
+    );
+  };
+
   return (
     <>
       <Grid
@@ -52,9 +58,9 @@ const CardGrid = () => {
         <GridItem width="140px" height="140px" onClick={onOpen}>
           <HeaderCard />
         </GridItem>
-        {cards.map((card, index) => (
-          <GridItem key={index} width="140px" height="140px">
-            <Card text={card.text} />
+        {cards.map((card) => (
+          <GridItem key={card.id} width="140px" height="140px">
+            <Card id={card.id} text={card.text} onUpdate={updateCardText} />
           </GridItem>
         ))}
       </Grid>
