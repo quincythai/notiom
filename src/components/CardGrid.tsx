@@ -41,7 +41,7 @@ const CardGrid = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const updateCardText = (id, newText) => {
+  const updateCardText = (id: number, newText: string) => {
     setCards(
       cards.map((card) => (card.id === id ? { ...card, text: newText } : card))
     );
