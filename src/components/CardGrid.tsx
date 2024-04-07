@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Center, Grid, GridItem, Spinner, useDisclosure } from "@chakra-ui/react";
+import {
+  Center,
+  Grid,
+  GridItem,
+  Spinner,
+  useDisclosure,
+} from "@chakra-ui/react";
 import Card from "./Card";
 import HeaderCard from "./HeaderCard";
 
@@ -23,16 +29,16 @@ interface Card {
 const CardGrid = () => {
   const [cards, setCards] = useState<Card[]>([]);
   const [value, setValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // Define fetchCards function outside of useEffect
   const fetchCards = async () => {
-    setIsLoading(true)
-    const response = await fetch('/api/getCards');
+    setIsLoading(true);
+    const response = await fetch("/api/getCards");
     const data = await response.json();
     setCards(data);
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   // Fetch cards from MongoDB
@@ -46,12 +52,12 @@ const CardGrid = () => {
     };
 
     try {
-      const response = await fetch('api/createCard', {
-        method: 'POST',
+      const response = await fetch("api/createCard", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(newCard)
+        body: JSON.stringify(newCard),
       });
 
       if (!response.ok) {
@@ -66,19 +72,32 @@ const CardGrid = () => {
     }
   };
 
-  const deleteCard = async (id) => {
-    // ...code to delete a card
-    await fetchCards(); // Refetch cards after deleting one
+  // have to specify /${id} to find specific one in mongodb database
+  const deleteCard = async (id: string) => {
+    try {
+      const response = await fetch(`api/deleteCard/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete card: ${response.statusText}`);
+      }
+      await fetchCards(); // Refetch cards after deleting one
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const updateCard = async (id, newText) => {
     // Implement a call to the backend to update the card text
     // For now, this is just updating the state, which won't persist
-    setCards(cards.map((card) => (card.id === id ? { ...card, text: newText } : card)));
+    setCards(
+      cards.map((card) => (card.id === id ? { ...card, text: newText } : card))
+    );
   };
 
   return (
-    <> 
+    <>
       <Grid
         templateColumns="repeat(6, 140px)"
         gap={6}
@@ -92,14 +111,18 @@ const CardGrid = () => {
           <Center width="100%" height="100%">
             <Spinner size="xl" />
           </Center>
-        ): (
+        ) : (
           cards.map((card) => (
             <GridItem key={card.id} width="140px" height="140px">
-              <Card id={card.id} text={card.text} onUpdate={updateCard} />
+              <Card
+                id={card.id}
+                text={card.text}
+                onUpdate={updateCard}
+                onDelete={deleteCard}
+              />
             </GridItem>
           ))
         )}
-       
       </Grid>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

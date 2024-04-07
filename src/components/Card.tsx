@@ -12,18 +12,18 @@ import {
   ModalCloseButton,
   Button,
   Textarea,
-  Text
+  Text,
 } from "@chakra-ui/react";
 
 // Question mark means make the text prop optional i.e. put lorem default
 interface CardProps {
   id: string; //MongoDB's _id is a string not a number
   text: string;
-  // dateCreated: Date;
   onUpdate: (id: string, newTest: string) => void;
+  onDelete: (id: string) => void;
 }
 
-const Card: React.FC<CardProps> = ({ text, id, onUpdate }) => {
+const Card: React.FC<CardProps> = ({ text, id, onUpdate, onDelete }) => {
   const [editedText, setEditedText] = useState(text);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -36,10 +36,6 @@ const Card: React.FC<CardProps> = ({ text, id, onUpdate }) => {
   };
 
   const trimmedText = trimText(text, 5);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setEditedText(e.target.value);
-  };
 
   return (
     <>
@@ -65,12 +61,11 @@ const Card: React.FC<CardProps> = ({ text, id, onUpdate }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit Card</ModalHeader>
-          {/* <Text>Date created: {dateCreated.toLocaleDateString()}</Text> */}
           <ModalCloseButton />
           <ModalBody>
             <Textarea
               value={editedText}
-              onChange={handleInputChange}
+              onChange={(e) => setEditedText(e.target.value)}
             ></Textarea>
           </ModalBody>
 
@@ -80,12 +75,23 @@ const Card: React.FC<CardProps> = ({ text, id, onUpdate }) => {
             </Button>
             <Button
               colorScheme="blue"
+              mr={3}
               onClick={() => {
                 onUpdate(id, editedText);
                 onClose();
               }}
             >
               Confirm edit
+            </Button>
+            <Button
+              colorScheme="red"
+              mr={3}
+              onClick={() => {
+                onDelete(id);
+                onClose();
+              }}
+            >
+              Delete card
             </Button>
           </ModalFooter>
         </ModalContent>
