@@ -15,8 +15,13 @@ import {
   Button,
 } from "@chakra-ui/react";
 
+interface Card {
+  id: string;
+  text: string;
+}
+
 const CardGrid = () => {
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState<Card[]>([]);
   const [value, setValue] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -31,35 +36,21 @@ const CardGrid = () => {
     fetchCards().catch(console.error)
   }, [])
 
-  const handleInputChange = (e) => {
-    setValue(e.target.value);
+  const addNewCard = async () => {
+    // ...code to add a new card
+    await fetchCards(); // Refetch cards after adding a new one
   };
 
-  // const addNewCard = async () => {
-  //   const newCard = {
-  //     text: value,
-  //     createdAt: new Date().toISOString(), // Add a createdAt field
-  //   };
+  const deleteCard = async (id) => {
+    // ...code to delete a card
+    await fetchCards(); // Refetch cards after deleting one
+  };
 
-  //   // Send the new card to the backend
-  //   const response = await fetch('/api/createDoc', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(newCard),
-  //   });
-
-  //   const createdCard = await response.json(); // The response from the backend should include the new card with an _id
-  //   setCards([...cards, createdCard]);
-  //   setValue("");
-  // };
-
-  // const updateCardText = async (id, newText) => {
-  //   // Implement a call to the backend to update the card text
-  //   // For now, this is just updating the state, which won't persist
-  //   setCards(cards.map((card) => (card.id === id ? { ...card, text: newText } : card)));
-  // };
+  const updateCard = async (id, newText) => {
+    // Implement a call to the backend to update the card text
+    // For now, this is just updating the state, which won't persist
+    setCards(cards.map((card) => (card.id === id ? { ...card, text: newText } : card)));
+  };
 
 
   return (
@@ -75,7 +66,7 @@ const CardGrid = () => {
         </GridItem>
         {cards.map((card) => (
           <GridItem key={card.id} width="140px" height="140px">
-            <Card id={card.id} text={card.text} onUpdate={updateCardText} />
+            <Card id={card.id} text={card.text} onUpdate={updateCard} />
           </GridItem>
         ))}
       </Grid>
@@ -88,7 +79,7 @@ const CardGrid = () => {
             <Textarea
               placeholder="Enter card text..."
               value={value}
-              onChange={handleInputChange}
+              onChange={(e) => setValue(e.target.value)}
             ></Textarea>
           </ModalBody>
 
