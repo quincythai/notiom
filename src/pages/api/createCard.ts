@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const client = await clientPromise;
       const db = client.db('notiom');
       
-      const result = await db.collection('documents').insertOne(req.body);
+      const result = await db.collection('cards').insertOne(req.body);
 
       res.status(201).json(result);
     } catch (error) {

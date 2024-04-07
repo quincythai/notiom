@@ -25,20 +25,42 @@ const CardGrid = () => {
   const [value, setValue] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // Fetch cards from Mongodb
+  // Define fetchCards function outside of useEffect
+  const fetchCards = async () => {
+    const response = await fetch('/api/getCards');
+    const data = await response.json();
+    setCards(data);
+  };
+
+  // Fetch cards from MongoDB
   useEffect(() => {
-    const fetchCards = async () => {
-      const response = await fetch('/api/getDocs');
-      const data = await response.json();
-      setCards(data)
+    fetchCards().catch(console.error);
+  }, []);
+
+  const addCard = async () => {
+    const newCard = {
+      text: value, // value from the textbox variable
     };
 
-    fetchCards().catch(console.error)
-  }, [])
+    try {
+      const response = await fetch('api/createCard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newCard)
+      });
 
-  const addNewCard = async () => {
-    // ...code to add a new card
-    await fetchCards(); // Refetch cards after adding a new one
+      if (!response.ok) {
+        throw new Error(`Failed to add new card: ${response.statusText}`);
+      }
+
+      setValue("");
+
+      await fetchCards(); // Now fetchCards is accessible here
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const deleteCard = async (id) => {
@@ -51,7 +73,6 @@ const CardGrid = () => {
     // For now, this is just updating the state, which won't persist
     setCards(cards.map((card) => (card.id === id ? { ...card, text: newText } : card)));
   };
-
 
   return (
     <>
@@ -90,7 +111,7 @@ const CardGrid = () => {
             <Button
               colorScheme="blue"
               onClick={() => {
-                addNewCard();
+                addCard();
                 onClose();
               }}
             >
