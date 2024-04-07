@@ -14,10 +14,11 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 
+// Question mark means make the text prop optional i.e. put lorem default
 interface CardProps {
-  text: string; // Question mark means make the text prop optional i.e. put lorem default
-  id: number;
-  onUpdate: Function;
+  text: string;
+  id: string; //MongoDB's _id is a string not a number
+  onUpdate: (id: string, newTest: string) => void;
 }
 
 const Card: React.FC<CardProps> = ({ text, id, onUpdate }) => {
