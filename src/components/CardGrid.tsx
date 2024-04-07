@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, GridItem, useDisclosure } from "@chakra-ui/react";
 import Card from "./Card";
 import HeaderCard from "./HeaderCard";
@@ -16,36 +16,51 @@ import {
 } from "@chakra-ui/react";
 
 const CardGrid = () => {
-  const [cards, setCards] = useState([
-    {
-      id: 1,
-      text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint quod unde iure. Maxime nisi velit fugiat voluptate, aperiam magnam commodi culpa? Magni, praesentium doloribus perspiciatis sequi quasi labore molestiae quos!",
-    },
-  ]);
-
+  const [cards, setCards] = useState([]);
   const [value, setValue] = useState("");
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const inputValue = e.target.value;
-    setValue(inputValue);
-  };
-
-  const addNewCard = () => {
-    const newCard = {
-      id: cards.length + 1,
-      text: value,
-    };
-    setCards([...cards, newCard]);
-    setValue("");
-  };
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const updateCardText = (id: number, newText: string) => {
-    setCards(
-      cards.map((card) => (card.id === id ? { ...card, text: newText } : card))
-    );
+  // Fetch cards from Mongodb
+  useEffect(() => {
+    const fetchCards = async () => {
+      const response = await fetch('/api/getDocs');
+      const data = await response.json();
+      setCards(data)
+    };
+
+    fetchCards().catch(console.error)
+  }, [])
+
+  const handleInputChange = (e) => {
+    setValue(e.target.value);
   };
+
+  // const addNewCard = async () => {
+  //   const newCard = {
+  //     text: value,
+  //     createdAt: new Date().toISOString(), // Add a createdAt field
+  //   };
+
+  //   // Send the new card to the backend
+  //   const response = await fetch('/api/createDoc', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(newCard),
+  //   });
+
+  //   const createdCard = await response.json(); // The response from the backend should include the new card with an _id
+  //   setCards([...cards, createdCard]);
+  //   setValue("");
+  // };
+
+  // const updateCardText = async (id, newText) => {
+  //   // Implement a call to the backend to update the card text
+  //   // For now, this is just updating the state, which won't persist
+  //   setCards(cards.map((card) => (card.id === id ? { ...card, text: newText } : card)));
+  // };
+
 
   return (
     <>

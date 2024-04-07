@@ -12,12 +12,14 @@ import {
   ModalCloseButton,
   Button,
   Textarea,
+  Text
 } from "@chakra-ui/react";
 
 // Question mark means make the text prop optional i.e. put lorem default
 interface CardProps {
-  text: string;
   id: string; //MongoDB's _id is a string not a number
+  text: string;
+  // dateCreated: Date;
   onUpdate: (id: string, newTest: string) => void;
 }
 
@@ -63,6 +65,7 @@ const Card: React.FC<CardProps> = ({ text, id, onUpdate }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit Card</ModalHeader>
+          {/* <Text>Date created: {dateCreated.toLocaleDateString()}</Text> */}
           <ModalCloseButton />
           <ModalBody>
             <Textarea
