@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.status(201).json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Unable to create document' });
+      res.status(500).json({ error: 'Unable to create card' });
     }
   } else {
     res.status(405).json({ error: 'Method not allowed' });

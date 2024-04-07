@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, GridItem, useDisclosure } from "@chakra-ui/react";
+import { Center, Grid, GridItem, Spinner, useDisclosure } from "@chakra-ui/react";
 import Card from "./Card";
 import HeaderCard from "./HeaderCard";
 
@@ -23,13 +23,16 @@ interface Card {
 const CardGrid = () => {
   const [cards, setCards] = useState<Card[]>([]);
   const [value, setValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // Define fetchCards function outside of useEffect
   const fetchCards = async () => {
+    setIsLoading(true)
     const response = await fetch('/api/getCards');
     const data = await response.json();
     setCards(data);
+    setIsLoading(false)
   };
 
   // Fetch cards from MongoDB
@@ -75,7 +78,7 @@ const CardGrid = () => {
   };
 
   return (
-    <>
+    <> 
       <Grid
         templateColumns="repeat(6, 140px)"
         gap={6}
@@ -85,11 +88,18 @@ const CardGrid = () => {
         <GridItem width="140px" height="140px" onClick={onOpen}>
           <HeaderCard />
         </GridItem>
-        {cards.map((card) => (
-          <GridItem key={card.id} width="140px" height="140px">
-            <Card id={card.id} text={card.text} onUpdate={updateCard} />
-          </GridItem>
-        ))}
+        {isLoading ? (
+          <Center width="100%" height="100%">
+            <Spinner size="xl" />
+          </Center>
+        ): (
+          cards.map((card) => (
+            <GridItem key={card.id} width="140px" height="140px">
+              <Card id={card.id} text={card.text} onUpdate={updateCard} />
+            </GridItem>
+          ))
+        )}
+       
       </Grid>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
