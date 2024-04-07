@@ -1,5 +1,11 @@
 import { MongoClient } from "mongodb";
 
+declare global {
+  namespace globalThis {
+    var _mongoClientPromise: Promise<MongoClient>
+  }
+}
+
 let client;
 let clientPromise;
 
@@ -7,9 +13,10 @@ if (!process.env.MONGODB_URI) {
   throw new Error("Please add your Mongo URI to .env.local");
 }
 
+const uri = process.env.MONGODB_URI;
+
 if (process.env.NODE_ENV === "development") {
   console.log("Connected to mongo");
-  const uri = process.env.MONGODB_URI;
   // In development mode, use a global variable so that the value
   // is preserved across module reloads caused by HMR (Hot Module Replacement).
   if (!global._mongoClientPromise) {
