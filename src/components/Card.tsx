@@ -17,13 +17,13 @@ import {
 
 // Question mark means make the text prop optional i.e. put lorem default
 interface CardProps {
-  id: string; //MongoDB's _id is a string not a number
+  _id: string; //MongoDB's _id is a string not a number\
   text: string;
-  onUpdate: (id: string, newTest: string) => void;
-  onDelete: (id: string) => void;
+  onUpdate: (_id: string, newTest: string) => void;
+  onDelete: (_id: string) => void;
 }
 
-const Card: React.FC<CardProps> = ({ text, id, onUpdate, onDelete }) => {
+const Card: React.FC<CardProps> = ({ text, _id, onUpdate, onDelete }) => {
   const [editedText, setEditedText] = useState(text);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -77,7 +77,7 @@ const Card: React.FC<CardProps> = ({ text, id, onUpdate, onDelete }) => {
               colorScheme="blue"
               mr={3}
               onClick={() => {
-                onUpdate(id, editedText);
+                onUpdate(_id, editedText);
                 onClose();
               }}
             >
@@ -87,7 +87,8 @@ const Card: React.FC<CardProps> = ({ text, id, onUpdate, onDelete }) => {
               colorScheme="red"
               mr={3}
               onClick={() => {
-                onDelete(id);
+                console.log(_id);
+                onDelete(_id);
                 onClose();
               }}
             >

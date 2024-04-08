@@ -22,7 +22,6 @@ export default async function handler(
       } else {
         res.status(404).json({ message: "Card not found" });
       }
-      res.status(201).json(result);
     } catch (error) {
       res.status(500).json({ error: "Failed to delete card" });
     }

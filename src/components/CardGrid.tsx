@@ -23,6 +23,7 @@ import {
 
 interface Card {
   id: string;
+  _id?: string; // include the _id property from MongoDB
   text: string;
 }
 
@@ -37,7 +38,11 @@ const CardGrid = () => {
     setIsLoading(true);
     const response = await fetch("/api/getCards");
     const data = await response.json();
-    setCards(data);
+    const cardsWithId = data.map((card: Card) => ({
+      ...card,
+      id: card._id,
+    }));
+    setCards(cardsWithId);
     setIsLoading(false);
   };
 
@@ -82,7 +87,8 @@ const CardGrid = () => {
       if (!response.ok) {
         throw new Error(`Failed to delete card: ${response.statusText}`);
       }
-      await fetchCards(); // Refetch cards after deleting one
+
+      await fetchCards();
     } catch (error) {
       console.log(error);
     }
