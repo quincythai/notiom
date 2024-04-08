@@ -10,7 +10,7 @@ export default async function handler(
     try {
       const client = await clientPromise;
       const db = client.db("notiom");
-      const id = req.query.docId; // gets the id string from the /api/deleteCard/${id}'
+      const id = req.query; // gets the id string from the /api/deleteCard/${id}'
 
       // console.log(id);
 

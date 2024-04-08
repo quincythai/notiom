@@ -75,7 +75,7 @@ const CardGrid = () => {
   // have to specify /${id} to find specific one in mongodb database
   const deleteCard = async (_id: string) => {
     try {
-      const response = await fetch(`api/deleteCard?docId=${_id}`, {
+      const response = await fetch(`api/deleteCard/${_id}`, {
         method: "DELETE",
       });
 
@@ -89,12 +89,25 @@ const CardGrid = () => {
     }
   };
 
-  const updateCard = async (id, newText) => {
-    // Implement a call to the backend to update the card text
-    // For now, this is just updating the state, which won't persist
-    setCards(
-      cards.map((card) => (card.id === id ? { ...card, text: newText } : card))
-    );
+  const updateCard = async (_id: string, newText: string) => {
+    try {
+      const response = await fetch(`/api/updateCard/${_id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: newText }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update card: ${response.statusText}`);
+      }
+
+      // Refetch cards to update the UI
+      await fetchCards();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
