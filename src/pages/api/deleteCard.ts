@@ -10,12 +10,16 @@ export default async function handler(
     try {
       const client = await clientPromise;
       const db = client.db("notiom");
-      const { id } = req.query; // gets the id string from the /api/deleteCard/${id}
+      const id = req.query.docId; // gets the id string from the /api/deleteCard/${id}'
+
+      console.log(id);
 
       // specify _id of the ObjectId as a string
       const result = await db
         .collection("cards")
         .deleteOne({ _id: new ObjectId(id as string) });
+
+      console.log("Delete operation result:", result);
 
       if (result.deletedCount === 1) {
         res.status(200).json({ message: "Card deleted successfully" });

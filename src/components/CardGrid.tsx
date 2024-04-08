@@ -22,8 +22,7 @@ import {
 } from "@chakra-ui/react";
 
 interface Card {
-  id: string;
-  _id?: string; // include the _id property from MongoDB
+  _id: string; // include the _id property from MongoDB
   text: string;
 }
 
@@ -38,11 +37,7 @@ const CardGrid = () => {
     setIsLoading(true);
     const response = await fetch("/api/getCards");
     const data = await response.json();
-    const cardsWithId = data.map((card: Card) => ({
-      ...card,
-      id: card._id,
-    }));
-    setCards(cardsWithId);
+    setCards(data);
     setIsLoading(false);
   };
 
@@ -78,9 +73,9 @@ const CardGrid = () => {
   };
 
   // have to specify /${id} to find specific one in mongodb database
-  const deleteCard = async (id: string) => {
+  const deleteCard = async (_id: string) => {
     try {
-      const response = await fetch(`api/deleteCard/${id}`, {
+      const response = await fetch(`api/deleteCard?docId=${_id}`, {
         method: "DELETE",
       });
 
@@ -119,9 +114,9 @@ const CardGrid = () => {
           </Center>
         ) : (
           cards.map((card) => (
-            <GridItem key={card.id} width="140px" height="140px">
+            <GridItem key={card._id} width="140px" height="140px">
               <Card
-                id={card.id}
+                _id={card._id}
                 text={card.text}
                 onUpdate={updateCard}
                 onDelete={deleteCard}
